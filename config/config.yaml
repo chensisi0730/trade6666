@@ -176,6 +176,136 @@ rss:
       url: "https://torss.coffeeduck.top/rss?q=%23tech"
       enabled: true
 
+    # === StockTwits RSS 源 (使用 rss.app 第三方服务) ===
+    - id: "stocktwits-trending"
+      name: "StockTwits - Trending Tickers"
+      url: "https://rss.app/feed/stocktwits-trending"
+      enabled: true
+
+    - id: "stocktwits-ai"
+      name: "StockTwits - AI Stocks"
+      url: "https://rss.app/feed/stocktwits-ai-stocks"
+      enabled: true
+
+    # === Seeking Alpha RSS 源 ===
+    - id: "seekingalpha-marketnews"
+      name: "Seeking Alpha - Market News"
+      url: "https://seekingalpha.com/market_news/rss"
+      enabled: true
+
+    - id: "seekingalpha-technical"
+      name: "Seeking Alpha - Technical Analysis"
+      url: "https://seekingalpha.com/technical-analysis/rss"
+      enabled: true
+
+    - id: "seekingalpha-etfs"
+      name: "Seeking Alpha - ETFs"
+      url: "https://seekingalpha.com/etfs/rss"
+      enabled: true
+
+    # === Yahoo Finance RSS 源 ===
+    - id: "yahoo-finance-topnews"
+      name: "Yahoo Finance - Top News"
+      url: "https://financialservices.yahoo.com/rss/finance/topnews"
+      enabled: true
+
+    - id: "yahoo-finance-marketnews"
+      name: "Yahoo Finance - Market News"
+      url: "https://financialservices.yahoo.com/rss/finance/news"
+      enabled: true
+
+    - id: "yahoo-finance-ai"
+      name: "Yahoo Finance - AI News"
+      url: "https://quotes.finance.yahoo.com/rss/ai"
+      enabled: true
+
+    # === Benzinga RSS 源 ===
+    - id: "benzinga-premarket"
+      name: "Benzinga - Pre-Market Movers"
+      url: "https://www.benzinga.com/rss/pre-market-movers.xml"
+      enabled: true
+
+    - id: "benzinga-afterhours"
+      name: "Benzinga - After-Hours Movers"
+      url: "https://www.benzinga.com/rss/after-hours-movers.xml"
+      enabled: true
+
+    # === Investing.com RSS 源 ===
+    - id: "investing-usstocks"
+      name: "Investing.com - US Stocks"
+      url: "https://cn.investing.com/rss/newsflash.asp?id=2421"
+      enabled: true
+
+    - id: "investing-chinastocks"
+      name: "Investing.com - China Stocks"
+      url: "https://cn.investing.com/rss/newsflash.asp?id=2235"
+      enabled: true
+
+    # === MarketWatch RSS 源 ===
+    - id: "marketwatch-tech"
+      name: "MarketWatch - Technology"
+      url: "https://feeds.marketwatch.com/marketwatch/tech/"
+      enabled: true
+
+    - id: "marketwatch-etfs"
+      name: "MarketWatch - ETFs"
+      url: "https://feeds.marketwatch.com/marketwatch/etfs/"
+      enabled: true
+
+    # === Finviz RSS 源 ===
+    - id: "finviz-news"
+      name: "Finviz - Stock News"
+      url: "https://finviz.com/rss.ashx?t=stock_news"
+      enabled: true
+
+    # === Chinese Stock Sources ===
+    - id: "sina-finance"
+      name: "新浪财经 - 美股"
+      url: "http://rss.sina.com.cn/finance/stock/us/1.xml"
+      enabled: true
+
+    - id: "sina-a-shares"
+      name: "新浪财经 - A 股"
+      url: "http://rss.sina.com.cn/finance/stock/a/1.xml"
+      enabled: true
+
+    - id: "eastmoney-foreign"
+      name: "东方财富 - 外盘"
+      url: "https://w.eastmoney.com/RealTimeData/news/rss"
+      enabled: true
+
+    # === Reddit 股票社区 ===
+    - id: "reddit-stocks"
+      name: "Reddit - r/stocks"
+      url: "https://www.reddit.com/r/stocks/.rss"
+      enabled: true
+
+    - id: "reddit-wallstreetbets"
+      name: "Reddit - r/wallstreetbets"
+      url: "https://www.reddit.com/r/wallstreetbets/.rss"
+      enabled: true
+
+    - id: "reddit-investing"
+      name: "Reddit - r/investing"
+      url: "https://www.reddit.com/r/investing/.rss"
+      enabled: true
+
+    - id: "reddit-pennystocks"
+      name: "Reddit - r/pennystocks"
+      url: "https://www.reddit.com/r/pennystocks/.rss"
+      enabled: true
+
+    # === Twitter 股票话题 ===
+    - id: "twitter-sp500"
+      name: "Twitter - S&P 500"
+      url: "https://torss.coffeeduck.top/rss?q=%23SP500"
+      enabled: true
+
+    - id: "twitter-nasdaq"
+      name: "Twitter - NASDAQ"
+      url: "https://torss.coffeeduck.top/rss?q=%23NASDAQ"
+      enabled: true
+
 
 # ===============================================================
 # 4. 报告模式
@@ -606,15 +736,15 @@ advanced:
   # 热榜爬虫技术参数
   crawler:
     request_interval: 2000            # 请求间隔（毫秒）
-    use_proxy: false                  # 是否启用代理
-    default_proxy: "http://127.0.0.1:10801"
+    use_proxy: true                   # 是否启用代理
+    default_proxy: "http://127.0.0.1:7897"  # CLASH 代理
 
   # RSS 设置
   rss:
     request_interval: 1000            # 请求间隔（毫秒）
-    timeout: 15                       # 请求超时（秒）
-    use_proxy: false                  # 是否使用代理
-    proxy_url: ""                     # RSS 专属代理（留空则使用 crawler.default_proxy）
+    timeout: 30                       # 请求超时（秒）- 代理环境下适当增加
+    use_proxy: true                   # 是否使用代理
+    proxy_url: "http://127.0.0.1:7897"  # CLASH 代理
 
   # 排序权重（用于重新排序不同平台的热搜）
   # 合起来等于 1

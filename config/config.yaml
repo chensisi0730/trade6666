@@ -160,20 +160,20 @@ rss:
       url: "https://www.reddit.com/r/CryptoCurrency/.rss"
       enabled: true
 
-    # === Twitter/X RSS 源 (使用 torss 第三方服务) ===
+    # === Twitter/X RSS 源 (使用 Nitter 开源服务) ===
     - id: "twitter-ai"
       name: "Twitter - AI/Tech News"
-      url: "https://torss.coffeeduck.top/rss?list=1457306098830672385"
+      url: "https://nitter.net/search/rss?q=AI%20OR%20artificial%20intelligence"
       enabled: true
 
     - id: "twitter-elonmusk"
       name: "Twitter - Elon Musk"
-      url: "https://torss.coffeeduck.top/rss?q=from%3Aelonmusk"
+      url: "https://nitter.net/elonmusk/rss"
       enabled: true
 
     - id: "twitter-technews"
       name: "Twitter - Tech News"
-      url: "https://torss.coffeeduck.top/rss?q=%23tech"
+      url: "https://nitter.net/search/rss?q=%23tech"
       enabled: true
 
     # === StockTwits RSS 源 (使用 rss.app 第三方服务) ===
@@ -298,12 +298,12 @@ rss:
     # === Twitter 股票话题 ===
     - id: "twitter-sp500"
       name: "Twitter - S&P 500"
-      url: "https://torss.coffeeduck.top/rss?q=%23SP500"
+      url: "https://nitter.net/search/rss?q=%23SP500"
       enabled: true
 
     - id: "twitter-nasdaq"
       name: "Twitter - NASDAQ"
-      url: "https://torss.coffeeduck.top/rss?q=%23NASDAQ"
+      url: "https://nitter.net/search/rss?q=%23NASDAQ"
       enabled: true
 
 
@@ -587,7 +587,7 @@ ai:
   # 完整列表: https://docs.litellm.ai/docs/providers
   # 如果你对于看英文文档比较头疼，那么可以点击页面右下角的 【Ask AI】 ,用中文询问怎么配置 
   
-  model: "Qwen35-27B"         # 使用 openai/前缀以兼容 OpenAI 协议
+  model: "openai/GPT-5.0"         # 使用 openai/前缀以兼容 OpenAI 协议
   
   api_key: "11"                       # API Key（建议使用环境变量 AI_API_KEY）
   

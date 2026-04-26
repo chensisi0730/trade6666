@@ -1,0 +1,39 @@
+name: Sync Upstream
+
+on:
+  schedule:
+    # 每天凌晨 2 点自动同步
+    - cron: '0 2 * * *'
+  workflow_dispatch:  # 允许手动触发
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+      - name: Add upstream
+        run: |
+          git remote add upstream https://github.com/sansan0/TrendRadar.git
+          git fetch upstream
+
+      - name: Sync master
+        run: |
+          git checkout master
+          git merge upstream/master --no-edit || echo "No changes to merge"
+          git push origin master
+
+      - name: Sync my_trade_github_action
+        run: |
+          git checkout my_trade_github_action
+          git merge master --no-edit || echo "No changes to merge"
+          git push origin my_trade_github_action

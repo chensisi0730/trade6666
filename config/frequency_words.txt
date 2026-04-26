@@ -168,11 +168,9 @@
 /智元|灵犀|稚晖君|彭志辉|AgiBot/ => 智元机器人
 /众擎|EngineAI|赵同阳/ => 众擎机器人
 
-
-
 /qwen|kimi|glm/ => 国产开源模型
 
-/特斯拉|马斯克|\bTesla\b|\bTerafab\b||\bAI 6\b\bOptimus\b|\bElon Musk\b|\bCybertruck\b|\bModel 3\b|\bModel Y\b|\bModel S\b|\bModel X\b|\bFSD\b/ => 特斯拉
+/特斯拉|马斯克|\bTesla\b|\bTerafab\b||\bAI 6\b\bOptimus\b|\bElon Musk\b|\bCybertruck\b|\bFSD\b/ => 特斯拉
 
 /英伟达|黄仁勋|\bNVIDIA\b|\bRTX\b|\bCUDA\b|\bJensen Huang\b/ => 英伟达
 /苏姿丰|锐龙|霄龙|\bAMD\b|\b395+\b|\bEPYC\b|\bRadeon\b|\bLisa Su\b/ => AMD
@@ -189,26 +187,7 @@
 #                         国家与地区
 # ═══════════════════════════════════════════════════════════════
 
-[中国]
-国产
-中国
 
-[东亚]
-日本
-朝鲜
-韩国
-
-[北美]
-美国
-加拿大
-
-[西欧]
-法国
-英国
-
-/俄罗斯|俄国/ => 俄罗斯
-
-印度
 
 
 # ═══════════════════════════════════════════════════════════════

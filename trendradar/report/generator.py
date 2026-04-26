@@ -21,6 +21,7 @@ def prepare_report_data(
     matches_word_groups_func: Optional[Callable] = None,
     load_frequency_words_func: Optional[Callable] = None,
     show_new_section: bool = True,
+    rss_status: Optional[Dict] = None,
 ) -> Dict:
     """
     准备报告数据
@@ -35,6 +36,11 @@ def prepare_report_data(
         matches_word_groups_func: 词组匹配函数
         load_frequency_words_func: 加载频率词函数
         show_new_section: 是否显示新增热点区域
+        rss_status: RSS 抓取状态，包含成功和失败的源列表
+            {
+                "success": [{"id": "", "name": "", "count": 0}, ...],
+                "failed": [{"id": "", "name": "", "error": ""}, ...]
+            }
 
     Returns:
         Dict: 准备好的报告数据
@@ -136,6 +142,7 @@ def prepare_report_data(
         "total_new_count": sum(
             len(source["titles"]) for source in processed_new_titles
         ),
+        "rss_status": rss_status or {"success": [], "failed": []},
     }
 
 
@@ -154,6 +161,7 @@ def generate_html_report(
     render_html_func: Optional[Callable] = None,
     matches_word_groups_func: Optional[Callable] = None,
     load_frequency_words_func: Optional[Callable] = None,
+    rss_status: Optional[Dict] = None,
 ) -> str:
     """
     生成 HTML 报告
@@ -200,6 +208,7 @@ def generate_html_report(
         rank_threshold,
         matches_word_groups_func,
         load_frequency_words_func,
+        rss_status=rss_status,
     )
 
     # 渲染 HTML 内容

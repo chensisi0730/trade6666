@@ -242,6 +242,7 @@ class NewsAnalyzer:
         self.proxy_url = None
         self._setup_proxy()
         self.data_fetcher = DataFetcher(self.proxy_url)
+        self.last_rss_data = None  # 保存最后一次 RSS 抓取数据，用于报告展示
 
         # 初始化存储管理器（使用 AppContext）
         self._init_storage_manager()
@@ -891,6 +892,30 @@ class NewsAnalyzer:
         # HTML生成（如果启用）— 使用翻译后的数据
         html_file = None
         if self.ctx.config["STORAGE"]["FORMATS"]["HTML"]:
+            # 构建 RSS 抓取状态（仅在配置开启时）
+            rss_status = None
+            rss_config = self.ctx.config.get("RSS", {})
+            show_status = rss_config.get("SHOW_STATUS", {})
+            if show_status.get("HTML", False) and self.last_rss_data:
+                rss_status = {
+                    "success": [],
+                    "failed": []
+                }
+                for feed_id, items in self.last_rss_data.items.items():
+                    name = self.last_rss_data.id_to_name.get(feed_id, feed_id)
+                    rss_status["success"].append({
+                        "id": feed_id,
+                        "name": name,
+                        "count": len(items)
+                    })
+                for feed_id in self.last_rss_data.failed_ids:
+                    name = self.last_rss_data.id_to_name.get(feed_id, feed_id)
+                    rss_status["failed"].append({
+                        "id": feed_id,
+                        "name": name,
+                        "error": "请求失败"
+                    })
+
             html_file = self.ctx.generate_html(
                 stats,
                 total_titles,
@@ -904,6 +929,7 @@ class NewsAnalyzer:
                 ai_analysis=ai_result,
                 standalone_data=standalone_data,
                 frequency_file=self.frequency_file,
+                rss_status=rss_status,
             )
 
         return stats, html_file, ai_result, rss_items
@@ -974,8 +1000,32 @@ class NewsAnalyzer:
                         current_results=current_results, schedule=schedule
                     )
 
+            # 构建 RSS 抓取状态（仅在 HTML 显示开启时）
+            rss_status = None
+            rss_config = cfg.get("RSS", {})
+            show_status = rss_config.get("SHOW_STATUS", {})
+            if show_status.get("HTML", False) and self.last_rss_data:
+                rss_status = {
+                    "success": [],
+                    "failed": []
+                }
+                for feed_id, items in self.last_rss_data.items.items():
+                    name = self.last_rss_data.id_to_name.get(feed_id, feed_id)
+                    rss_status["success"].append({
+                        "id": feed_id,
+                        "name": name,
+                        "count": len(items)
+                    })
+                for feed_id in self.last_rss_data.failed_ids:
+                    name = self.last_rss_data.id_to_name.get(feed_id, feed_id)
+                    rss_status["failed"].append({
+                        "id": feed_id,
+                        "name": name,
+                        "error": "请求失败"
+                    })
+
             # 准备报告数据
-            report_data = self.ctx.prepare_report(stats, failed_ids, new_titles, id_to_name, mode, frequency_file=self.frequency_file)
+            report_data = self.ctx.prepare_report(stats, failed_ids, new_titles, id_to_name, mode, frequency_file=self.frequency_file, rss_status=rss_status)
 
             # 是否发送版本更新信息
             update_info_to_send = self.update_info if cfg["SHOW_VERSION_UPDATE"] else None
@@ -1090,6 +1140,30 @@ class NewsAnalyzer:
 
         return results, id_to_name, failed_ids
 
+    def _print_rss_status(self, rss_data) -> None:
+        """在终端打印 RSS 抓取状态"""
+        if not rss_data:
+            return
+
+        success_count = len(rss_data.items)
+        failed_count = len(rss_data.failed_ids)
+
+        print(f"\n[RSS] 抓取状态: 成功 {success_count} 个源, 失败 {failed_count} 个源")
+
+        if success_count > 0:
+            print("[RSS] ✅ 成功的源:")
+            for feed_id, items in rss_data.items.items():
+                name = rss_data.id_to_name.get(feed_id, feed_id)
+                print(f"  - {name}: {len(items)} 条")
+
+        if failed_count > 0:
+            print("[RSS] ❌ 失败的源:")
+            for feed_id in rss_data.failed_ids:
+                name = rss_data.id_to_name.get(feed_id, feed_id)
+                print(f"  - {name}")
+
+        print()
+
     def _crawl_rss_data(self) -> Tuple[Optional[List[Dict]], Optional[List[Dict]], Optional[List[Dict]], set]:
         """
         执行 RSS 数据抓取
@@ -1170,6 +1244,15 @@ class NewsAnalyzer:
 
             # 抓取数据
             rss_data = fetcher.fetch_all()
+
+            # 保存 RSS 数据到实例变量，用于报告展示抓取状态
+            self.last_rss_data = rss_data
+
+            # 在终端打印 RSS 抓取状态（如果配置开启）
+            rss_config = self.ctx.config.get("RSS", {})
+            show_status = rss_config.get("SHOW_STATUS", {})
+            if show_status.get("TERMINAL", True):
+                self._print_rss_status(rss_data)
 
             # 保存到存储后端
             if self.storage_manager.save_rss_data(rss_data):

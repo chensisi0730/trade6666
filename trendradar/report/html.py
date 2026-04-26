@@ -573,6 +573,108 @@ def render_html_content(
                 font-family: 'SF Mono', Consolas, monospace;
             }
 
+            .rss-status-section {
+                background: #f0f9ff;
+                border: 1px solid #bae6fd;
+                border-radius: 8px;
+                margin-bottom: 24px;
+                overflow: hidden;
+            }
+
+            .rss-status-title {
+                background: #e0f2fe;
+                color: #0369a1;
+                font-size: 14px;
+                font-weight: 600;
+                padding: 12px 16px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                user-select: none;
+            }
+
+            .rss-status-title:hover {
+                background: #bae6fd;
+            }
+
+            .rss-status-summary {
+                margin-left: auto;
+                font-size: 12px;
+                font-weight: 500;
+                color: #0284c7;
+            }
+
+            .rss-status-content {
+                padding: 16px;
+                display: block;
+            }
+
+            .rss-status-content.collapsed {
+                display: none;
+            }
+
+            .rss-status-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+            }
+
+            @media (max-width: 600px) {
+                .rss-status-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            .rss-status-column {
+                background: white;
+                border-radius: 6px;
+                padding: 12px;
+            }
+
+            .rss-status-subtitle {
+                font-size: 13px;
+                font-weight: 600;
+                margin-bottom: 8px;
+                padding-bottom: 6px;
+                border-bottom: 1px solid #e5e7eb;
+            }
+
+            .rss-status-list {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                max-height: 200px;
+                overflow-y: auto;
+            }
+
+            .rss-status-item {
+                font-size: 12px;
+                padding: 4px 0;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-bottom: 1px solid #f3f4f6;
+            }
+
+            .rss-status-item:last-child {
+                border-bottom: none;
+            }
+
+            .rss-count {
+                color: #059669;
+                font-weight: 500;
+            }
+
+            .rss-error {
+                color: #dc2626;
+                font-size: 11px;
+                max-width: 120px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
             .footer {
                 margin-top: 32px;
                 padding: 20px 24px;
@@ -1325,6 +1427,47 @@ def render_html_content(
                     </ul>
                 </div>"""
 
+    # 处理 RSS 抓取状态
+    rss_status = report_data.get("rss_status", {"success": [], "failed": []})
+    if rss_status["success"] or rss_status["failed"]:
+        html += """
+                <div class="rss-status-section">
+                    <div class="rss-status-title" onclick="toggleRssStatus()">
+                        <span id="rss-toggle-icon">▼</span> 📡 RSS 抓取状态
+                        <span class="rss-status-summary">"""
+        success_count = len(rss_status["success"])
+        failed_count = len(rss_status["failed"])
+        html += f"成功: {success_count} 个源"
+        if failed_count > 0:
+            html += f' <span style="color: #dc2626;">失败: {failed_count} 个源</span>'
+        html += """</span>
+                    </div>
+                    <div id="rss-status-content" class="rss-status-content">
+                        <div class="rss-status-grid">"""
+
+        # 成功的源
+        if rss_status["success"]:
+            html += '<div class="rss-status-column"><div class="rss-status-subtitle">✅ 抓取成功</div><ul class="rss-status-list">'
+            for feed in rss_status["success"]:
+                name = html_escape(feed.get("name", feed.get("id", "Unknown")))
+                count = feed.get("count", 0)
+                html += f'<li class="rss-status-item rss-success">{name} <span class="rss-count">({count} 条)</span></li>'
+            html += '</ul></div>'
+
+        # 失败的源
+        if rss_status["failed"]:
+            html += '<div class="rss-status-column"><div class="rss-status-subtitle">❌ 抓取失败</div><ul class="rss-status-list">'
+            for feed in rss_status["failed"]:
+                name = html_escape(feed.get("name", feed.get("id", "Unknown")))
+                error = html_escape(feed.get("error", "未知错误"))
+                html += f'<li class="rss-status-item rss-failed" title="{error}">{name} <span class="rss-error">{error[:30]}...</span></li>'
+            html += '</ul></div>'
+
+        html += """
+                        </div>
+                    </div>
+                </div>"""
+
     # 生成热点词汇统计部分的HTML
     stats_html = ""
     tab_bar_html = ""
@@ -1981,6 +2124,17 @@ def render_html_content(
                 try { localStorage.setItem('trendradar-dark-mode', isDark ? '1' : '0'); } catch(e) {}
                 var btn = document.querySelector('.toggle-dark-btn');
                 if (btn) btn.textContent = isDark ? '☀' : '☽';
+            }
+
+            function toggleRssStatus() {
+                var content = document.getElementById('rss-status-content');
+                var icon = document.getElementById('rss-toggle-icon');
+                if (content) {
+                    content.classList.toggle('collapsed');
+                    if (icon) {
+                        icon.textContent = content.classList.contains('collapsed') ? '▶' : '▼';
+                    }
+                }
             }
 
             function initTabs() {

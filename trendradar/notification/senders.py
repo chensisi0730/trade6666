@@ -115,9 +115,8 @@ def send_to_feishu(
         bool: 发送是否成功
     """
     headers = {"Content-Type": "application/json"}
+    # 企业微信是国内服务，不使用代理
     proxies = None
-    if proxy_url:
-        proxies = {"http": proxy_url, "https": proxy_url}
 
     # 日志前缀
     log_prefix = f"飞书{account_label}" if account_label else "飞书"

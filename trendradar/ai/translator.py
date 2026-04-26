@@ -43,18 +43,39 @@ class AITranslator:
 
         Args:
             translation_config: AI 翻译配置 (AI_TRANSLATION)
-            ai_config: AI 模型配置（LiteLLM 格式）
+            ai_config: AI 模型配置（LiteLLM 格式），当 translation_config 中有独立 ai 配置时会被覆盖
         """
         self.translation_config = translation_config
-        self.ai_config = ai_config
 
         # 翻译配置
         self.enabled = translation_config.get("ENABLED", False)
         self.target_language = translation_config.get("LANGUAGE", "English")
         self.scope = translation_config.get("SCOPE", {"HOTLIST": True, "RSS": True, "STANDALONE": True})
 
+        # 检查是否有独立的翻译 AI 配置
+        translation_ai_config = translation_config.get("AI", {})
+        if translation_ai_config and any(v for v in translation_ai_config.values() if v):
+            # 使用独立的翻译 AI 配置，合并到全局配置中
+            self.ai_config = ai_config.copy()
+            # 覆盖指定的配置项
+            if translation_ai_config.get("MODEL"):
+                self.ai_config["MODEL"] = translation_ai_config["MODEL"]
+            if translation_ai_config.get("API_KEY"):
+                self.ai_config["API_KEY"] = translation_ai_config["API_KEY"]
+            if translation_ai_config.get("API_BASE"):
+                self.ai_config["API_BASE"] = translation_ai_config["API_BASE"]
+            if translation_ai_config.get("TIMEOUT"):
+                self.ai_config["TIMEOUT"] = translation_ai_config["TIMEOUT"]
+            if translation_ai_config.get("TEMPERATURE") is not None:
+                self.ai_config["TEMPERATURE"] = translation_ai_config["TEMPERATURE"]
+            if translation_ai_config.get("MAX_TOKENS"):
+                self.ai_config["MAX_TOKENS"] = translation_ai_config["MAX_TOKENS"]
+            print(f"[翻译] 使用独立 AI 配置，模型: {self.ai_config.get('MODEL', '默认')}")
+        else:
+            self.ai_config = ai_config
+
         # 创建 AI 客户端（基于 LiteLLM）
-        self.client = AIClient(ai_config)
+        self.client = AIClient(self.ai_config)
 
         # 加载提示词模板
         self.system_prompt, self.user_prompt_template = load_prompt_template(

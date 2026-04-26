@@ -1196,13 +1196,63 @@ ai_translation:
 
 ### 请选择适合你的部署方式
 
-#### 🅰️ 方案一：Docker 部署（推荐 🔥）
+#### 🅰️ 方案一：本地部署（开发/测试推荐 ⚡）
+
+* **特点**：最快上手，实时调试，数据本地存储
+* **适用**：开发调试、本地测试、快速验证功能
+* **前置条件**：Python 3.10+
+
+**快速开始：**
+```bash
+# 1. 克隆项目
+git clone https://github.com/sansan0/TrendRadar.git
+cd TrendRadar
+
+# 2. 安装依赖（使用 uv，推荐）
+uv sync
+
+# 或者使用 pip
+pip install -r requirements.txt
+
+# 3. 配置（编辑 config/config.yaml）
+# - 配置 AI 模型（如 DeepSeek、本地 Ollama 等）
+# - 配置推送渠道（飞书、钉钉、Telegram 等）
+
+# 4. 运行体检检查配置
+uv run python -m trendradar --doctor
+
+# 5. 启动程序
+uv run python -m trendradar
+```
+
+**查看结果：**
+```bash
+# 方式 1：直接打开 HTML 报告
+xdg-open output/html/latest/current.html  # Linux
+open output/html/latest/current.html      # macOS
+
+# 方式 2：启动本地 HTTP 服务器（局域网访问）
+cd output/html
+python3 -m http.server 8080
+# 浏览器访问：http://localhost:8080/latest/current.html
+```
+
+**查看数据库：**
+```bash
+# 查看今日数据库
+sqlite3 output/news/2026-04-25.db
+SELECT * FROM news LIMIT 10;
+```
+
+---
+
+#### 🅱️ 方案二：Docker 部署（推荐 🔥）
 
 * **特点**：比 GitHub Actions 更稳定，数据本地存储（无需配置云存储）
 * **适用**：有自己的服务器、NAS 或长期运行的电脑
 * **注意**：你需要阅读了解下方的基础配置流程，然后跳转到 Docker 教程进行部署。
 
-#### 🅱️ 方案二：GitHub Actions 部署（本章节内容 ⬇️）
+#### 🅾️ 方案三：GitHub Actions 部署（本章节内容 ⬇️）
 
 * **特点**：无服务器，数据存储在 **远程云存储**（推荐配置）
 * **适用**：没有服务器的用户，利用 GitHub 免费资源

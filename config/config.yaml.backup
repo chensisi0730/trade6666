@@ -160,20 +160,20 @@ rss:
       url: "https://www.reddit.com/r/CryptoCurrency/.rss"
       enabled: true
 
-    # === Twitter/X RSS 源 (使用 Nitter 开源服务) ===
+    # === Twitter/X RSS 源 (使用 torss 第三方服务) ===
     - id: "twitter-ai"
       name: "Twitter - AI/Tech News"
-      url: "https://nitter.net/search/rss?q=AI%20OR%20artificial%20intelligence"
+      url: "https://torss.coffeeduck.top/rss?list=1457306098830672385"
       enabled: true
 
     - id: "twitter-elonmusk"
       name: "Twitter - Elon Musk"
-      url: "https://nitter.net/elonmusk/rss"
+      url: "https://torss.coffeeduck.top/rss?q=from%3Aelonmusk"
       enabled: true
 
     - id: "twitter-technews"
       name: "Twitter - Tech News"
-      url: "https://nitter.net/search/rss?q=%23tech"
+      url: "https://torss.coffeeduck.top/rss?q=%23tech"
       enabled: true
 
     # === StockTwits RSS 源 (使用 rss.app 第三方服务) ===
@@ -298,12 +298,12 @@ rss:
     # === Twitter 股票话题 ===
     - id: "twitter-sp500"
       name: "Twitter - S&P 500"
-      url: "https://nitter.net/search/rss?q=%23SP500"
+      url: "https://torss.coffeeduck.top/rss?q=%23SP500"
       enabled: true
 
     - id: "twitter-nasdaq"
       name: "Twitter - NASDAQ"
-      url: "https://nitter.net/search/rss?q=%23NASDAQ"
+      url: "https://torss.coffeeduck.top/rss?q=%23NASDAQ"
       enabled: true
 
 
@@ -350,7 +350,7 @@ report:
 # 5) 这里决定“筛选路径”，不决定 AI 模型（模型在 ai 段）
 # ===============================================================
 filter:
-  method: "ai"                          # 可选: keyword | ai
+  method: "ai"                     # 可选: keyword | ai
 
   # AI 模式标签排序开关（仅 ai 模式生效）
   # true: 按标签优先级排序（来自兴趣描述提取顺序）
@@ -566,7 +566,7 @@ storage:
   # 数据拉取配置（从远程同步到本地）
   # 用于 MCP Server 等场景：爬虫存到远程，MCP 拉取到本地分析
   pull:
-    enabled: true                    # 是否启用启动时自动拉取
+    enabled: false                    # 是否启用启动时自动拉取
     days: 7                           # 拉取最近 N 天的数据
 
 
@@ -587,7 +587,7 @@ ai:
   # 完整列表: https://docs.litellm.ai/docs/providers
   # 如果你对于看英文文档比较头疼，那么可以点击页面右下角的 【Ask AI】 ,用中文询问怎么配置 
   
-  model: "openai/GPT-5.2"         # 使用 openai/前缀以兼容 OpenAI 协议
+  model: "openai/GPT-5.0"         # 使用 openai/前缀以兼容 OpenAI 协议
   
   api_key: "11"                       # API Key（建议使用环境变量 AI_API_KEY）
   
@@ -699,7 +699,7 @@ ai_analysis:
 # 模型配置见上方 ai 配置段
 # ===============================================================
 ai_translation:
-  enabled: false                   # 是否启用翻译功能（当前禁用：本地模型思考链导致速度太慢）
+  enabled: true                    # 是否启用翻译功能
 
   # 翻译目标语言
   # 格式：自然语言描述

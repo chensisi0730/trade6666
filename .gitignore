@@ -1,0 +1,52 @@
+# 环境变量文件（包含敏感信息）
+.env
+.env.local
+.env.*.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# 虚拟环境
+venv/
+ENV/
+env/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 日志
+*.log
+logs/
+
+# 数据文件（可能包含敏感信息）
+data/*.json
+data/*.csv
+!data/.gitkeep
+
+# 报告输出
+output/
+reports/

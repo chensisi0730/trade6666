@@ -6,6 +6,10 @@ TrendRadar 主程序
 支持: python -m trendradar
 """
 
+# 加载 .env 文件中的环境变量（必须在其他导入之前）
+from dotenv import load_dotenv
+load_dotenv()
+
 import argparse
 import copy
 import json
